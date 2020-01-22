@@ -1,0 +1,229 @@
+%YAML:1.0
+
+InitVIOTmpPath: "/home/dxq/workspace/ros_ws/laser_visual_ws/src/vill/Log/"
+bVerbose: 0
+bUseDirect: 0
+bUseIMU: 0
+bUseLaser: 0
+bUseLaserMap: 0
+bUseCeres: 1
+
+laserMapCirculate: 3
+
+imutopic: "/imu_data"
+imagetopic: "/kitti/camera_color_left/image_rect"
+rimagetopic: "/kitti/camera_color_right/image_rect"
+
+LocalMapping.LocalWindowSize: 10
+LocalMapping.InitWindowSize: 10
+visual.minInitMapPoints: 80
+visual.minInitTrackPoints: 60
+Tracking.CacheFeatures: 150
+vins.InitTime: 5
+
+# Init threashold
+# escape flag
+Init.ScaleThreashold: 2 # Increase if the scale is incorrect
+Init.GravityThreashold: 25 # Increase if the gravity is incorrect
+Init.ThetaThreashold: 25 # Increase if the theta is incorrect
+# KeyFrame select and culling flag
+Init.ParalaxThreashold: 25 # Increase if the number of KF is insufficient
+Init.CullingThreashold: 0.9 # Increase if too heavily culling
+
+
+# ORB Extractor: Number of features per image
+ORBextractor.nFeatures: 3000
+
+# ORB Extractor: Scale factor between levels in the scale pyramid 	
+ORBextractor.scaleFactor: 1.2
+
+# ORB Extractor: Number of levels in the scale pyramid	
+ORBextractor.nLevels: 8
+
+# ORB Extractor: Fast threshold
+# Image is divided in a grid. At each cell FAST are extracted imposing a minimum response.
+# Firstly we impose iniThFAST. If no corners are detected we impose a lower value minThFAST
+# You can lower these values if your images have low contrast			
+ORBextractor.iniThFAST: 20
+ORBextractor.minThFAST: 7
+
+# Camera calibration and distortion parameters (OpenCV) once calibrated, no need to change.
+
+
+#b->imu, c->camera
+Camera.Tbc:
+ [-0.0025,    0.0149,    0.9999,   -0.0300,
+   -0.9996,   -0.0276,   -0.0021,    0.0238,
+    0.0276,   -0.9995,    0.0150,   -0.0053,
+         0,         0,         0,    1.0000]
+
+
+# Camera calibration and distortion parameters (OpenCV) 
+# used in param
+Camera.fx: 718.856
+Camera.fy: 718.856
+Camera.cx: 607.1928
+Camera.cy: 185.2157
+
+Camera.bUseDistK6: 0
+Camera.k1: 0.0
+Camera.k2: 0.0
+Camera.p1: 0.0
+Camera.p2: 0.0
+
+Camera.width: 1280
+Camera.height: 512
+
+denseSfM: 1
+
+# Camera frames per second 
+Camera.fps: 16.0
+
+# stereo baseline times fx
+Camera.bf: 382.66995
+#Camera.bf: 183.6007
+
+# Color order of the images (0: BGR, 1: RGB. It is ignored if images are grayscale)
+Camera.RGB: 1
+
+# Close/Far threshold. Baseline times.
+ThDepth: 35
+
+# Camera calibration and distortion parameters (OpenCV) 
+LEFT.K: !!opencv-matrix
+   rows: 3
+   cols: 3
+   dt: d
+   data: [718.856, 0.0, 607.1928, 0.0, 718.856, 185.2157, 0, 0, 1]
+
+RIGHT.K: !!opencv-matrix
+   rows: 3
+   cols: 3
+   dt: d
+   data: [718.856, 0.0, 607.1928, 0.0, 718.856, 185.2157, 0, 0, 1]
+
+LEFT.P:  !!opencv-matrix
+   rows: 3
+   cols: 4
+   dt: d
+   data: [718.856, 0.0, 607.1928, 45.38225, 0.0, 718.856, 185.2157, -0.1130887, 0.0, 0.0, 1.0, 0.003779761]
+
+# !!!careful RIGHT.P(0,3)
+RIGHT.P:  !!opencv-matrix
+   rows: 3
+   cols: 4
+   dt: d
+   data: [718.856, 0.0, 607.1928, -337.2877, 0.0, 718.856, 185.2157, 2.369057, 0.0, 0.0, 1.0, 0.004915215]
+
+LEFT.R:  !!opencv-matrix
+   rows: 3
+   cols: 3
+   dt: d
+   data: [1,0,0,0,1,0,0,0,1]
+
+RIGHT.R:  !!opencv-matrix
+   rows: 3
+   cols: 3
+   dt: d
+   data: [1,0,0,0,1,0,0,0,1]
+
+
+LEFT.D: !!opencv-matrix
+   rows: 1
+   cols: 5
+   dt: d
+   data: [ 0,0, 0, 0, 0]
+
+RIGHT.D: !!opencv-matrix
+   rows: 1
+   cols: 5
+   dt: d
+   data: [0,0, 0, 0, 0]
+
+R:  !!opencv-matrix
+   rows: 1
+   cols: 3
+   dt: d
+   data: [-0.0004516174864119247, 0.02056928964260119, -0.07386985422664787]
+
+T: !!opencv-matrix
+   rows: 1
+   cols: 3
+   dt: d
+   data: [ -511.3637  , 16.2308  ,  6.3005]
+
+LEFT.height: 376
+LEFT.width: 1240
+
+RIGHT.height: 376
+RIGHT.width: 1240
+
+#--------------------------------------------------------------------------------------------
+# Viewer Parameters
+#---------------------------------------------------------------------------------------------
+Viewer.KeyFrameSize: 0.15
+Viewer.KeyFrameLineWidth: 1
+Viewer.GraphLineWidth: 0.9
+Viewer.PointSize: 2
+Viewer.CameraSize: 0.08
+Viewer.CameraLineWidth: 3
+Viewer.ViewpointX: 0
+Viewer.ViewpointY: -0.7
+Viewer.ViewpointZ: -1.8
+Viewer.ViewpointF: 500
+
+
+
+
+#syywh
+LaserMap.icpFile: "/home/dxq/workspace/ros_ws/laser_visual_ws/src/vill/Examples/ROS/vill/cfg/icp.yaml"
+LaserMap.inputFile: "/home/dxq/workspace/ros_ws/laser_visual_ws/src/vill/Examples/ROS/vill/cfg/input_filters.yaml"
+LaserMap.inputFile_localMap: "/home/dxq/workspace/ros_ws/laser_visual_ws/src/vill/Examples/ROS/vill/cfg/input_filters_localMap.yaml"
+LaserMap.postFile: "/home/dxq/workspace/ros_ws/laser_visual_ws/src/vill/Examples/ROS/vill/cfg/map_post_filters.yaml"
+#LaserMap.initPose: "/home/dxq/workspace/ros_ws/laser_visual_ws/src/vill/Examples/ROS/vill/cfg/garage.txt"
+
+##change for offline global optimization
+LaserMap.groundgruth: "/media/dxq/Data/chery/1221_parking_2/laser_trajectory.txt"
+
+
+LaserMap.extrinsic: "/home/dxq/workspace/ros_ws/laser_visual_ws/src/vill/Examples/ROS/vill/cfg/extrinsic.txt"
+LaserMap.refinement: "/home/dxq/workspace/ros_ws/laser_visual_ws/src/vill/Examples/ROS/vill/cfg/refine.txt"
+Viewer.LaserMapPointSize: 2
+Viewer.MatchedPointSize:4
+
+
+
+#20170824
+Optimizer.distTH: 3
+Optimizer.invariatDist: 40
+Optimizer.searchN: 3 #3
+Optimizer.iteration_count: 1
+Optimizer.p2pInfo:  1#50
+Optimizer.p2planeInfo: 1#30
+Optimizer.relativeInfo:  200
+Optimizer.relativeReproInfo: 750
+Optimizer.prioriInfo: 0.5
+Optimizer.delta: 0.5
+
+Tracking.thRefRatio: 0.5 #0.5
+Tracking.mnMatchesInliers_num: 20 
+Tracking.nRefMatches_ratio: 0.1 #0.1 
+Tracking.nTrackedClose_num: 80 #80
+Tracking.nNonTrackedClose_num: 160
+
+LocalMapping.MapPointCull: 0.3
+
+Opt.iteration_times: 3
+Opt.Huber: false
+Opt.ThReprojection: 1200
+Opt.ThLaser: 700#0.7
+Opt.ThPreintegration: 10
+Opt.ThPositionUp: 0.5#0.5
+Opt.ThVelocityUp: 0.5#0.6
+Opt.ThRotationUp: 0.2#0.15
+Opt.ThBiasa: 0.2#0.2
+Opt.ThBiasg: 0.01
+Opt.ThPriori: 1
+
+Opt.th_it_icp_fail: 3
+
