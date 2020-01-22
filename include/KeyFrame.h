@@ -374,6 +374,11 @@ namespace vill {
 		vector<int> re_vMapPoints;
 		long unsigned int pre_id;
 		
+		//used for depth completion loss
+		std::map<pair<int,int>, int> m_pt_mpid;//reproject map  points to this keyframe
+		cv::Mat gradient_for_mp;
+		float loss;
+		
     protected:
       
       //for saving

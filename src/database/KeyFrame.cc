@@ -70,7 +70,7 @@ namespace vill {
             mnMaxY(F.mnMaxY), mK(F.mK), mvpMapPoints(F.mvpMapPoints), mpKeyFrameDB(pKFDB),
             mpORBvocabulary(F.mpORBvocabulary), mbFirstConnection(true), mpParent(NULL), mbNotErase(false),
             mbToBeErased(false), mbBad(false), mHalfBaseline(F.mb / 2), mpMap(pMap), mpPrevKeyFrame(nullptr),
-            mpNextKeyFrame(nullptr),save_updated(0),
+            mpNextKeyFrame(nullptr),save_updated(0),loss(0),
             bIsInitKF(false),initializedByVIO(false) {
         mnId = nNextId++;
 
@@ -102,7 +102,7 @@ namespace vill {
 		mvInvLevelSigma2(F.mvInvLevelSigma2), mnMinX(F.mnMinX), mnMinY(F.mnMinY), mnMaxX(F.mnMaxX),
 		mnMaxY(F.mnMaxY), mK(F.mK), mvpMapPoints(F.mvpMapPoints),
 		mpORBvocabulary(F.mpORBvocabulary), mbFirstConnection(true), mpParent(NULL), mbNotErase(false),
-		mbToBeErased(false), mbBad(false), mHalfBaseline(F.mb/2), mpMap(pMap)
+		mbToBeErased(false), mbBad(false), mHalfBaseline(F.mb/2), loss(0),mpMap(pMap)
 	{
 
 	}

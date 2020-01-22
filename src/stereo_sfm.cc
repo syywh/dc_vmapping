@@ -10,7 +10,8 @@
 #include<opencv2/core/core.hpp>
 #include<opencv2/highgui/highgui.hpp> 
 
-#include"System.h"
+#include "System.h"
+#include "dc_optimizer.h"
 
 #include <rosbag/bag.h>
 #include <rosbag/view.h>
@@ -74,6 +75,21 @@ void insert_depth_image(dc_vmapping::depth_completion_list& srv, cv::Mat& cv_dep
 		
 }
 
+void recover_gradients(dc_vmapping::depth_completion_list& srv, 
+					   map<int,cv::Mat>& m_id_gradient, map<int,float>& m_id_loss){
+	
+	for(int i = 0; i < srv.response.gradient_lists.size(); i++){
+		
+		sensor_msgs::Image depth_msg = srv.response.gradient_lists[i].image;
+		cv_bridge::CvImagePtr cv_ptr;
+		cv_ptr = cv_bridge::toCvCopy(depth_msg);
+		m_id_gradient[srv.response.gradient_lists[i].id] = cv_ptr->image;
+		std::cout << "gradient type "<<cv_ptr->image.type() <<" vs "<< CV_32FC1<< std::endl;
+		m_id_loss[srv.response.gradient_lists[i].id] = srv.response.losses[i];
+	}
+	
+}
+
 int main(int argc, char **argv)
 {
 	google::InitGoogleLogging(argv[0]);
@@ -110,7 +126,7 @@ int main(int argc, char **argv)
     }
 	
 	// Create SLAM system. It initializes all system threads and gets ready to process frames.
-    vill::System SLAM(params[1],params[2], vill::System::STEREO,true);
+    vill::System SLAM(params[1],params[2], vill::System::STEREO,false);
 	
 	vill::StereoConfigParam config(params[2]);
 	
@@ -167,6 +183,7 @@ int main(int argc, char **argv)
 		
 	}
 	
+
 	std::map<int, cv::Mat> depth_images = SLAM.getDepthMap();
 	std::map<int, cv::Mat>::iterator id_depth_iter = depth_images.begin();
 	
@@ -181,23 +198,39 @@ int main(int argc, char **argv)
 	std::cout << srv.request.depth_lists.size() <<std::endl;
 	std::cout << srv.request.rgb_lists.size() <<std::endl;
 	
+	dc_optimizer DCoptimizer(SLAM.getMapPtr());
+	
+	double initial_res = DCoptimizer.optimize_BA_with_dc_error();
+	
+	std::cout <<"init res = "<< initial_res <<std::endl;
+	
+	
 	if(client_optimization.call(srv)){
 		std::cout << "receive service" << std::endl;
+		
+		map<int,cv::Mat> m_id_gradient;
+		map<int,float> m_id_loss;
+		recover_gradients(srv, m_id_gradient, m_id_loss);
+		SLAM.update_gradient(m_id_gradient, m_id_loss);
+		
+		double initial_res = DCoptimizer.optimize_BA_with_dc_error();
+	
+		std::cout <<"res = "<< initial_res <<std::endl;
 		
 	}else{
 		std::cerr<<"Failed to call service depth_completion_server"<<std::endl;
 	}
 	
 	
-	
-	
-	
-	
-	SLAM.SaveTrajectoryTUM(
-		 params[3]+ "/FrameTrajectory_TUM_Format.txt");
-	SLAM.saveData(params[3]);
-	SLAM.saveDepthMap(params[3]);
-	
+// 	
+// 	
+// 	
+// 	
+// 	SLAM.SaveTrajectoryTUM(
+// 		 params[3]+ "/FrameTrajectory_TUM_Format.txt");
+// 	SLAM.saveData(params[3]);
+// 	SLAM.saveDepthMap(params[3]);
+// 	
 	SLAM.Shutdown();
 	ros::shutdown();
 	

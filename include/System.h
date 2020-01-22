@@ -167,7 +167,7 @@ namespace vill {
         // check if local map can accept keyframes (not busy)
         bool GetLocalMapAcceptKF();
 		
-		std::map<int, cv::Mat> getDepthMap();
+		
 		
 		void saveData(const string& filepath);
 		void saveDataKFMP(const string& filepath);
@@ -202,6 +202,9 @@ namespace vill {
 		Map* getMapPtr(){return mpMap;}
 		
 		bool CheckLocalMappingState();
+		
+		std::map<int, cv::Mat> getDepthMap();
+		void update_gradient(map<int, cv::Mat>& m_id_gradient, map<int, float>& m_id_loss);
 	
 	
     private:

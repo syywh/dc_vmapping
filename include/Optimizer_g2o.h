@@ -77,9 +77,9 @@ namespace vill {
 //                                            const map<KeyFrame *, set<KeyFrame *> > &LoopConnections,
 //                                            const bool &bFixScale, LoopClosing *pLC = NULL);
 
-        // if bFixScale is true, optimize SE3 (stereo,rgbd), Sim3 otherwise (mono)
-        static int OptimizeSim3(KeyFrame *pKF1, KeyFrame *pKF2, std::vector<MapPoint *> &vpMatches1,
-                                g2o::Sim3 &g2oS12, const float th2, const bool bFixScale);
+//         // if bFixScale is true, optimize SE3 (stereo,rgbd), Sim3 otherwise (mono)
+//         static int OptimizeSim3(KeyFrame *pKF1, KeyFrame *pKF2, std::vector<MapPoint *> &vpMatches1,
+//                                 g2o::Sim3 &g2oS12, const float th2, const bool bFixScale);
 	
 		static inline double norm(Vector3d r){
 		return ( r[0]*r[0] + r[1] * r[1] + r[2] * r[2]);

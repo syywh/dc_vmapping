@@ -137,7 +137,9 @@ ${OpenCV_LIBRARIES}
 )
 
 add_executable(stereo_msf
-src/stereo_sfm.cc)
+src/stereo_sfm.cc
+src/dc_optimizer.cc
+)
 
 target_link_libraries(stereo_msf
 stereo_mapping

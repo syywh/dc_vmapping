@@ -1038,6 +1038,9 @@ std::map<int, cv::Mat> System::getDepthMap(){
 		
 		cv::Mat im = cv::Mat(rows, cols, CV_16U, cv::Scalar(0));
 		
+		//init gradient map
+		pKF->gradient_for_mp = cv::Mat(rows, cols, CV_16U, cv::Scalar(0));
+		
 		int cnt = 0;
 // 		vector<MapPoint*> vMapPoints = pKF->GetMapPointMatches();
 		vector<MapPoint*> vMapPoints = mpMap->GetAllMapPoints();
@@ -1065,6 +1068,8 @@ std::map<int, cv::Mat> System::getDepthMap(){
 
 			
 			im.at<int>(res[1], res[0]) = point_in_c[2]*256;
+			
+			pKF->m_pt_mpid[pair<int,int>(res[1],res[0])] = pMp->mnId;
 			cnt++;
 		}
 		
@@ -1785,6 +1790,23 @@ void System::SaveToTXT(const string &folderName) {
 		return mpLocalMapper->AcceptKeyFrames();
 
 	}
+	
+	void System::update_gradient(map< int, Mat >& m_id_gradient, map<int, float>& m_id_loss)
+	{
+		vector<KeyFrame*> vKeyFrames = mpMap->GetAllKeyFrames();
+		
+		for(size_t i = 0; i < vKeyFrames.size(); i++){
+			vill::KeyFrame* pKF = vKeyFrames[i];
+			if(pKF->isBad()) continue;
+			
+			if(m_id_gradient.find(pKF->mnId) != m_id_gradient.end()){
+				pKF->gradient_for_mp = m_id_gradient[pKF->mnId];
+				pKF->loss = m_id_loss[pKF->mnId];
+			}
+		}
+
+	}
+
 
 
 
