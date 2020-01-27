@@ -197,35 +197,45 @@ double dc_optimizer::optimize_BA_with_dc_error()
 			for(int j = 0; j < 3; j++)
 				mappoints(j,seq_id) = p_in_C(j);
 			mappoints(3,seq_id) = 1;
-		}
-		
-		Eigen::MatrixXd Hessian(mappoint_size, mappoint_size);
-		Eigen::MatrixXd b(1, mappoint_size);
-		
-		double cov = 1;
-		b = pKFi->loss * cov * Jacob;
-		Hessian = Jacob.transpose() * cov * Jacob;
-		
-		Eigen::MatrixXd delta_z(1,mappoint_size);
-		delta_z = - Hessian.inverse() * b;
-		
-		for(int j = 0; j < vpMapPoints.size(); j++){
 			
-			g2o::VertexSBAPointXYZ *vPoint = vpMapPoints[j];
-			int seq_id = m_mpid_seqid[vPoint->id()-maxKFid-1];
+			double b = pKFi->loss * Jacob(0, seq_id);
+			double hessian = Jacob(0, seq_id) * Jacob(0, seq_id);
+			double delta_z = -hessian * b;
 			
-			mappoints(2,seq_id) += delta_z(0, seq_id);
-			
-			g2o::Vector3D update_p;
-			update_p(0) = mappoints(0,seq_id);
-			update_p(1) = mappoints(1,seq_id);
-			update_p(2) = mappoints(2,seq_id);
-			
-			update_p = init_kf_pose.inverse() * update_p;
-			
+			mappoints(2,seq_id) += delta_z;
+			p_in_C(2) += delta_z;
+			g2o::Vector3D update_p = init_kf_pose.inverse() * p_in_C;
 			vPoint->setEstimate(update_p);
 			
 		}
+		
+// 		Eigen::MatrixXd Hessian(mappoint_size, mappoint_size);
+// 		Eigen::MatrixXd b(1, mappoint_size);
+// 		
+// 		double cov = 1;
+// 		b = pKFi->loss * cov * Jacob;
+// 		Hessian = Jacob.transpose() * cov * Jacob;
+// 		
+// 		Eigen::MatrixXd delta_z(1,mappoint_size);
+// 		delta_z = - Hessian.inverse() * b;
+// 		
+// 		for(int j = 0; j < vpMapPoints.size(); j++){
+// 			
+// 			g2o::VertexSBAPointXYZ *vPoint = vpMapPoints[j];
+// 			int seq_id = m_mpid_seqid[vPoint->id()-maxKFid-1];
+// 			
+// 			mappoints(2,seq_id) += delta_z(0, seq_id);
+// 			
+// 			g2o::Vector3D update_p;
+// 			update_p(0) = mappoints(0,seq_id);
+// 			update_p(1) = mappoints(1,seq_id);
+// 			update_p(2) = mappoints(2,seq_id);
+// 			
+// 			update_p = init_kf_pose.inverse() * update_p;
+// 			
+// 			vPoint->setEstimate(update_p);
+// 			
+// 		}
 		
 		res = 0;
 	

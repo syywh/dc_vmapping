@@ -84,7 +84,7 @@ void recover_gradients(dc_vmapping::depth_completion_list& srv,
 		cv_bridge::CvImagePtr cv_ptr;
 		cv_ptr = cv_bridge::toCvCopy(depth_msg);
 		m_id_gradient[srv.response.gradient_lists[i].id] = cv_ptr->image;
-		std::cout << "gradient type "<<cv_ptr->image.type() <<" vs "<< CV_32FC1<< std::endl;
+// 		std::cout << "gradient type "<<cv_ptr->image.type() <<" vs "<< CV_32FC1<< std::endl;
 		m_id_loss[srv.response.gradient_lists[i].id] = srv.response.losses[i];
 	}
 	
